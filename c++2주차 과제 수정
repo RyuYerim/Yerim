@@ -1,0 +1,186 @@
+#include <iostream>
+using namespace std;
+
+const int CAR_COUNT = 3;
+const int ROWS = 5;
+const int COLS = 4;
+
+const int ADULT_PRICE = 25000;
+const int YOUTH_PRICE = 18000;
+
+int seats[CAR_COUNT][ROWS][COLS] = { 0 };
+
+int totalAdults = 0;
+int totalYouths = 0;
+
+// 좌석 현황을 출력하는 함수
+void AllSeats() {
+    for (int car = 0; car < CAR_COUNT; car++) {
+        cout << "1 2\t3 4 (" << car + 1 << "호차)" << endl;
+        cout << "-----------" << endl;
+        for (int row = 0; row < ROWS; row++) {
+            cout << (seats[car][row][0] == 0 ? "0 " : "1 ")
+                << (seats[car][row][1] == 0 ? "O " : "1 ") << "\t";
+            cout << (seats[car][row][2] == 0 ? "O " : "1 ")
+                << (seats[car][row][3] == 0 ? "O " : "1 ") << endl;
+        }
+        cout << "-----------" << endl;
+    }
+}
+
+// 좌석 예약하는 함수
+void reserveSeats() {
+    int adults, youths;
+    cout << "성인(25000원): ";
+    cin >> adults;
+    cout << "청소년(18000원): ";
+    cin >> youths;
+
+    for (int i = 0; i < adults + youths; i++) {
+        int car, row, col;
+        cout << "몇호차를 예약하시겠습니까? ";
+        cin >> car;
+
+        if (car < 1 || car > CAR_COUNT) {
+            cout << "예약 가능한 호차가 아닙니다. 다시 시도하세요." << endl;
+            i--; // 잘못된 입력일 경우 다시 입력 받기
+            continue;
+        }
+
+        cout << "몇번째 열, 몇번째 좌석을 예약하시겠습니까? (열, 행 순으로 입력): ";
+        cin >> col >> row;  // 열, 행 순으로 입력 받도록 수정
+
+        if (row < 1 || row > ROWS || col < 1 || col > COLS) {
+            cout << "잘못된 좌석 번호입니다. 다시 시도하세요." << endl;
+            i--;
+            continue;
+        }
+
+        car--; 
+        row--; 
+        col--; 
+
+        if (seats[car][row][col] == 1) {
+            cout << "이 좌석은 이미 예약되었습니다. 다른 좌석을 선택하세요." << endl;
+            i--;
+            continue;
+        }
+
+        seats[car][row][col] = 1;
+        cout << "예약되었습니다!" << endl;
+    }
+
+    totalAdults += adults;
+    totalYouths += youths;
+}
+
+// 예약 변경하는 함수
+void changeReservation() {
+    int changeCount;
+    cout << "바꿀 좌석의 갯수를 입력하세요: ";
+    cin >> changeCount;  // 변경할 좌석 수 입력
+
+    for (int i = 0; i < changeCount; i++) {
+        int currentCar, currentRow, currentCol, newCar, newRow, newCol;
+
+        cout << "현재 좌석과 바꿀 좌석을 입력하세요" << endl;
+
+        bool validInput = false; // 입력이 유효한지 확인하는 변수
+
+        // 현재 좌석 입력
+        while (!validInput) {
+            cout << "현재 좌석(H호차, N열, N번째) : ";
+            cin >> currentCar >> currentCol >> currentRow;
+
+            if (currentCar < 1 || currentCar > CAR_COUNT || currentRow < 1 || currentRow > ROWS || currentCol < 1 || currentCol > COLS) {
+                cout << "잘못된 좌석 번호입니다. 다시 입력해주세요." << endl;
+                continue; // 잘못된 좌석 번호라면 다시 입력을 받음
+            }
+
+            currentCar--; 
+            currentRow--; 
+            currentCol--; 
+
+            if (seats[currentCar][currentRow][currentCol] == 0) {
+                cout << "현재 좌석이 예약되지 않았습니다. 다시 입력해주세요." << endl;
+                continue; // 예약되지 않은 좌석이라면 다시 입력을 받음
+            }
+
+            validInput = true; 
+        }
+
+        validInput = false; // 새 좌석 입력을 위한 변수 초기화
+
+        // 변경할 새 좌석 입력
+        while (!validInput) {
+            cout << "변경 좌석(H호차, N열, N번째) : ";
+            cin >> newCar >> newCol >> newRow;
+
+            if (newCar < 1 || newCar > CAR_COUNT || newRow < 1 || newRow > ROWS || newCol < 1 || newCol > COLS) {
+                cout << "잘못된 좌석 번호입니다. 다시 입력해주세요." << endl;
+                continue; 
+            }
+
+            newCar--; 
+            newRow--; 
+            newCol--; 
+
+            if (currentCar == newCar && currentRow == newRow && currentCol == newCol) {
+                cout << "똑같은 자리입니다. 다른 좌석을 선택해주세요." << endl;
+                continue; // 현재 좌석과 새 좌석이 같으면 변경 불가
+            }
+
+            if (seats[newCar][newRow][newCol] == 1) {
+                cout << "좌석이 이미 예약되었습니다. 다른 좌석을 선택하세요." << endl;
+                continue; // 새 좌석이 이미 예약되었으면 다시 입력을 받음
+            }
+
+            // 예약 변경
+            seats[currentCar][currentRow][currentCol] = 0;
+            seats[newCar][newRow][newCol] = 1;
+            cout << "변경되었습니다!" << endl;
+            validInput = true; 
+        }
+    }
+}
+
+// 총 금액을 계산하는 함수
+int calculateTotalPrice() {
+    return (totalAdults * ADULT_PRICE) + (totalYouths * YOUTH_PRICE);
+}
+
+int main() {
+    int choice;
+
+    while (true) {
+        cout << "** 기차 예약 시스템 **" << endl;
+        cout << "1. 좌석 예약 시스템" << endl;
+        cout << "2. 예약 변경" << endl;
+        cout << "3. 프로그램 종료" << endl;
+        cout << "번호를 입력하세요: ";
+        cin >> choice;
+
+        if (choice == 3) {
+            // 3번을 선택하면 총 금액만 출력하고 종료
+            cout << "총 금액: " << calculateTotalPrice() << "원 입니다." << endl;
+            cout << "프로그램을 종료합니다." << endl;
+            break;  // 프로그램 종료
+        }
+
+        if (choice != 3) {
+            AllSeats();  // 3번이 아니면 좌석 현황 출력
+        }
+
+        if (choice == 1) {
+            reserveSeats();  // 좌석 예약
+        }
+        else if (choice == 2) {
+            changeReservation();  // 예약 변경
+        }
+        else {
+            cout << "잘못된 입력입니다. 다시 선택하세요." << endl;
+        }
+    }
+
+    return 0;
+}

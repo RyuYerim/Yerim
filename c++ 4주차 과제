@@ -1,0 +1,111 @@
+#include <iostream>
+#include <cmath> 
+
+using namespace std;
+
+
+class Shape {
+public:
+    // 정사각형 면적
+    double squareArea(double side) {
+        return side * side;
+    }
+
+    // 삼각형 면적
+    double triangleArea(double base, double height) {
+        return 0.5 * base * height;
+    }
+
+    // 정육면체 부피
+    double cubeVolume(double side) {
+        return pow(side, 3);
+    }
+
+    // 정육면체 겉넓이
+    double cubeSurface(double side) {
+        return 6 * pow(side, 2);
+    }
+
+    // 정사각뿔 부피
+    double squarePyramidVolume(double base, double height) {
+        return (1.0 / 3.0) * pow(base, 2) * height;
+    }
+
+    // 정사각뿔 겉넓이
+    double squarePyramidSurface(double base, double height) {
+        double slantHeight = sqrt(pow(base / 2.0, 2) + pow(height, 2));
+        double baseArea = pow(base, 2);
+        double triangleArea = 4 * (0.5 * base * slantHeight);
+        return baseArea + triangleArea;
+    }
+};
+int main() {
+    Shape shape;
+    int choice;
+
+    while (true) {
+        cout << "\n도형을 선택하세요:\n";
+        cout << "1. 정사각형 면적\n";
+        cout << "2. 삼각형 면적\n";
+        cout << "3. 정육면체 부피\n";
+        cout << "4. 정육면체 겉넓이\n";
+        cout << "5. 정사각뿔 부피\n";
+        cout << "6. 정사각뿔 겉넓이\n";
+        cout << "7. 종료\n";
+        cout << "선택: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1: {
+            double side;
+            cout << "변의 길이를 입력하세요: ";
+            cin >> side;
+            cout << "정사각형의 면적: " << shape.squareArea(side) << endl;
+            break;
+        }
+        case 2: {
+            double base, height;
+            cout << "밑변과 높이를 입력하세요: ";
+            cin >> base >> height;
+            cout << "삼각형의 면적: " << shape.triangleArea(base, height) << endl;
+            break;
+        }
+        case 3: {
+            double side;
+            cout << "한 변의 길이를 입력하세요: ";
+            cin >> side;
+            cout << "정육면체의 부피: " << shape.cubeVolume(side) << endl;
+            break;
+        }
+        case 4: {
+            double side;
+            cout << "한 변의 길이를 입력하세요: ";
+            cin >> side;
+            cout << "정육면체의 겉넓이: " << shape.cubeSurface(side) << endl;
+            break;
+        }
+        case 5: {
+            double base, height;
+            cout << "밑면의 길이와 높이를 입력하세요: ";
+            cin >> base >> height;
+            cout << "정사각뿔의 부피: " << shape.squarePyramidVolume(base, height) << endl;
+            break;
+        }
+        case 6: {
+            double base, height;
+            cout << "밑면의 길이와 높이를 입력하세요: ";
+            cin >> base >> height;
+            cout << "정사각뿔의 겉넓이: " << shape.squarePyramidSurface(base, height) << endl;
+            break;
+        }
+        case 7:
+            cout << "종료합니다." << endl;
+            return 0;
+
+        default:
+            cout << "잘못된 입력입니다. 다시 선택해주세요.\n";
+        }
+    }
+
+    return 0;
+}

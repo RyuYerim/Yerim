@@ -1,0 +1,149 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class Information {
+public:
+    string title;  
+    string author; 
+
+    Information(string t, string a) : title(t), author(a) {}
+
+    void display() const {
+        cout << "도서 제목: " << title << endl;
+        cout << "도서 저자: " << author << endl;
+    }
+
+    bool isSame(const string* t, const string* a) const {
+        return (this->title == *t && this->author == *a);
+    }
+};
+
+void addBook(vector<Information>& books) {
+    string title, author; // 도서 추가 함수
+
+    cout << "***** 도서 추가를 진행합니다 *****" << endl;
+
+    cout << "도서 제목을 입력하세요: ";
+    cin.ignore(); 
+    getline(cin, title);
+
+    cout << "도서 저자를 입력하세요: ";
+    getline(cin, author);
+
+    for (const auto& book : books) {
+        if (book.isSame(&title, &author)) {
+            cout << "이미 등록된 도서입니다.\n";
+            return;
+        }
+    }
+
+    books.push_back(Information(title, author));
+    cout << "도서가 성공적으로 추가되었습니다.\n";
+}
+
+// 도서 검색 함수
+void searchBook(const vector<Information>& books) {
+    string title, author;
+
+    cout << "***** 도서 검색을 진행합니다 *****" << endl;
+
+    cout << "검색할 도서 제목을 입력하세요: ";
+    cin.ignore();
+    getline(cin, title);
+
+    cout << "검색할 도서 저자를 입력하세요: ";
+    getline(cin, author);
+
+    for (const auto& book : books) {
+        if (book.isSame(&title, &author)) {
+            cout << "도서를 찾았습니다\n";
+            book.display();
+            return;
+        }
+    }
+
+    cout << "일치하는 도서를 찾을 수 없습니다.\n";
+}
+
+// 도서 정보 수정 함수
+void modifyBook(vector<Information>& books) {
+    string title, author;
+
+    cout << "***** 도서 수정을 진행합니다 *****" << endl;
+
+    cout << "수정할 도서 제목을 입력하세요: ";
+    cin.ignore();
+    getline(cin, title);
+
+    cout << "수정할 도서 저자를 입력하세요: ";
+    getline(cin, author);
+
+    for (auto& book : books) {
+        if (book.isSame(&title, &author)) {
+            string newTitle, newAuthor;
+
+            cout << "새로운 도서 제목 입력하세요: ";
+            getline(cin, newTitle);
+
+            cout << "새로운 도서 저자 입력하세요: ";
+            getline(cin, newAuthor);
+
+            for (const auto& other : books) {
+                if (other.isSame(&newTitle, &newAuthor)) {
+                    cout << "이미 등록된 도서입니다.\n";
+                    return;
+                }
+            }
+
+            book.title = newTitle;
+            book.author = newAuthor;
+            cout << "도서가 성공적으로 수정되었습니다.\n";
+            return;
+        }
+    }
+
+    cout << "일치하는 도서를 찾을 수 없습니다.\n";
+}
+
+// 프로그램 종료
+void exitProgram() {
+    cout << "프로그램을 종료합니다.\n";
+}
+
+int main() {
+    vector<Information> books;
+    int choice;
+
+    while (true) {
+        cout << "\n***** 도서 정보 관리 프로그램 *****\n";
+        cout << "1. 도서 추가\n";
+        cout << "2. 도서 검색\n";
+        cout << "3. 도서 정보 수정\n";
+        cout << "4. 프로그램 종료\n";
+        cout << "번호를 입력하세요: ";
+        cin >> choice;
+        cin.ignore(); 
+
+        switch (choice) {
+        case 1:
+            addBook(books);
+            break;
+        case 2:
+            searchBook(books);
+            break;
+        case 3:
+            modifyBook(books);
+            break;
+        case 4:
+            exitProgram();
+            return 0;
+        default:
+            cout << "정확한 번호를 입력하세요.\n";
+        }
+    }
+
+    return 0;
+}

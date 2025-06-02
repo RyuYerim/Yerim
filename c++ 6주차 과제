@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+template <typename T>
+void printVector(vector<T>& vec) {
+    typename vector<T>::iterator it;
+    for (it = vec.begin(); it != vec.end(); ++it) {
+        cout << *it << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    // 1. 정수형 벡터 생성 및 출력
+    vector<int> numbers;
+    numbers.push_back(5);
+    numbers.push_back(3);
+    numbers.push_back(7);
+    numbers.push_back(1);
+    numbers.push_back(9);
+
+    cout << "기존 벡터 숫자들: ";
+    printVector(numbers);
+
+    // 2. 정렬된 벡터 출력
+    sort(numbers.begin(), numbers.end());
+    cout << "정렬된 벡터 숫자들: ";
+    printVector(numbers);
+
+    // 3. 특정 값 검색 (find)
+    int target = 7;
+    auto it = find(numbers.begin(), numbers.end(), target);
+    if (it != numbers.end()) {
+        cout << target << " found in the vector." << endl;
+    }
+    else {
+        cout << target << " not found in the vector." << endl;
+    }
+
+    // 4. 문자열 벡터 정렬
+    vector<string> fruits;
+    fruits.push_back("banana");
+    fruits.push_back("apple");
+    fruits.push_back("orange");
+
+    cout << "\n기존 벡터 과일들: ";
+    printVector(fruits);
+
+    sort(fruits.begin(), fruits.end());
+    cout << "정렬된 벡터 과일들: ";
+    printVector(fruits);
+
+    // 5. 특정 문자열 검색
+    string fruitTarget = "apple";
+    auto fit = find(fruits.begin(), fruits.end(), fruitTarget);
+    if (fit != fruits.end()) {
+        cout << fruitTarget << " found in the vector." << endl;
+    }
+    else {
+        cout << fruitTarget << " not found in the vector." << endl;
+    }
+
+    return 0;
+}
